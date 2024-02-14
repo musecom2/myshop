@@ -38,7 +38,21 @@ $(function(){
          fade: true,
          cssEase: 'linear',
          autoplay: true,
-         autoplaySpeed: 5000
+         autoplaySpeed: 5000,
+         responsive: [
+            {
+              breakpoint: 768,
+              settings: {
+                slidesToShow: 1,
+                slidesToScroll: 1,
+                infinite: true,
+                dots: true,
+                autoplay: true,
+                autoplaySpeed: 5000,    
+                speed: 500         
+              }
+            }
+          ]
        });
    });   
 
