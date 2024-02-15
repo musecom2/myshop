@@ -48,7 +48,7 @@ $(document).ready(function(){
                   </div>
                   <input type="number" 
                            class="quantity" 
-                           name="quantity" 
+                           name="quantity[]" 
                            readonly>
                   <div class="input-group-append">
                         <button class="btn btn-outline-line qup" type="button">
@@ -58,7 +58,8 @@ $(document).ready(function(){
                </div>              
             </li>
        </ul>
-       <input type="hidden" class="toptmoney">
+       <input type="hidden" name="subtitle[]" class="subtitle">
+       <input type="hidden" name="toptmoney[]" class="toptmoney">
        <div class="tomoney col text-right"></div>  
        <i class="fa-solid fa-close remove-order"></i>
    </li>
@@ -72,8 +73,7 @@ $(document).ready(function(){
        for(let i = 0; i < $('.quantity').length; i++){
            quantityArray[i] = $('.quantity').eq(i).val();
        }
-       console.log(quantityArray);
-
+   
        opt2 = Number($(this).find("option:selected").data('size'));  //추가금액
        size = $(this).find("option:selected").val();
        sizetxt = $(this).find("option:selected").text();
@@ -91,11 +91,14 @@ $(document).ready(function(){
        for(let i = 0; i < $('.quantity').length; i++){
           $('.quantity').eq(i).val(quantityArray[i]);
        }
-       $('.toptmoney').eq(totalTextLength).val(tmoney);
+       $('.subtitle').eq(totalTextLength).val(`${colortxt}-${sizetxt}`); //input type hidden 에 정보 저장
+       $('.toptmoney').eq(totalTextLength).val(tmoney); //가격저장
        $('.total-text').eq(totalTextLength).html(optionText);   
        $('.quantity').eq(totalTextLength).val(1);
        $('.tomoney').eq(totalTextLength).html(tmoney.toLocaleString()+"원");
-     }
+       $('#submit, #cart').attr('disabled', false);
+       totalMoney(delivery);
+      }
    });
 
 
@@ -119,9 +122,7 @@ $(document).ready(function(){
       //let ind = $('.qup').index(this);
       //$('.tomoney').eq(ind).html(tmoney + "원");
 
-
-      // let txt = "총 상품금액(수량) : <strong>"+tmoney+"원</strong>("+quantity+"개)";
-      // $('.totalmoney').html(txt);
+      totalMoney(delivery);
    });
 
    //$('#qdown').click(function(){
@@ -139,14 +140,40 @@ $(document).ready(function(){
       ttmoney = ttmoney.toLocaleString(); //세자리 콤마
       $(this).parents('.add-opt').find('.tomoney').html(ttmoney + "원"); //출력
       
-      let txt = "총 상품금액(수량) : <strong>"+tmoney+"원</strong>("+quantity+"개)";
-      $('.totalmoney').html(txt);
+      totalMoney(delivery);
    });
 
    $(document).on('click', '.remove-order', function(){
        $(this).parents('.add-opt').remove();
+       if($('.addquantity').children().hasClass('add-opt')){
+          totalMoney(delivery);
+       }else{
+         $('.size').find("option:first").prop("selected", true);
+         $('#submit, #cart').attr('disabled', true);
+         $('.totalmoney').html("");
+       }   
    });
 
+  //본문 상세보기 스크립트
+  $('.nav-pills li').click(function(){
+    $('.nav-pills>li').removeClass('active');
+    $(this).addClass('active');
+  });
 
 });
 
+function totalMoney(delivery){
+   let tm = 0;
+      $('input[name="toptmoney[]"]').each(function(index){
+         let moneyVal = parseInt($(this).val());
+            let qt = parseInt($(".quantity").eq(index).val());
+            tm += moneyVal * qt;
+            console.log(tm);
+            //배송정책
+            if(tm > 200000) {
+               delivery = 0;
+            }
+            let txt = "총 상품금액(수량) : <strong>"+tm.toLocaleString()+"원</strong>+(배송비 :"+delivery.toLocaleString()+"원)";
+            $('.totalmoney').html(txt);
+      });
+}
