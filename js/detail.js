@@ -55,10 +55,10 @@ $(document).ready(function(){
                            <i class="fa-solid fa-chevron-up"></i>
                         </button>
                   </div>  
-               </div>
+               </div>              
             </li>
        </ul>
-     
+       <input type="hidden" class="toptmoney">
        <div class="tomoney col text-right"></div>  
        <i class="fa-solid fa-close remove-order"></i>
    </li>
@@ -67,7 +67,13 @@ $(document).ready(function(){
 
    $('.size').change(function(){
        totalTextLength = $('.total-text').length;
-       const oradd = $('.addquantity').html(); 
+       const oradd = $('.addquantity').html();
+       let quantityArray = [];  //quantity value 값을 따로 읽어서 배열에 저장
+       for(let i = 0; i < $('.quantity').length; i++){
+           quantityArray[i] = $('.quantity').eq(i).val();
+       }
+       console.log(quantityArray);
+
        opt2 = Number($(this).find("option:selected").data('size'));  //추가금액
        size = $(this).find("option:selected").val();
        sizetxt = $(this).find("option:selected").text();
@@ -81,6 +87,11 @@ $(document).ready(function(){
        sizetxt += " " + opt21;
        optionText = `<p>${colortxt}-${sizetxt}</p>`;
        $('.addquantity').html(oradd + opthtml);
+ 
+       for(let i = 0; i < $('.quantity').length; i++){
+          $('.quantity').eq(i).val(quantityArray[i]);
+       }
+       $('.toptmoney').eq(totalTextLength).val(tmoney);
        $('.total-text').eq(totalTextLength).html(optionText);   
        $('.quantity').eq(totalTextLength).val(1);
        $('.tomoney').eq(totalTextLength).html(tmoney.toLocaleString()+"원");
@@ -91,20 +102,26 @@ $(document).ready(function(){
 
   // $('#qup').click(function(){
    $(document).on('click', ".qup", function(){
-      let quantity = Number($(this).parent().prev().val());
+      let quantity = Number($(this).parent().prev().val()); //수량가져오기
       //let quantity = Number($('.quantity').eq(totalTextLength).val());
       quantity += 1;
       if(quantity > 9){
          alert("최대수량입니다.");
          quantity = 9;
       }
-      //$('.quantity').eq(totalTextLength).val(quantity);
-       $(this).parent().prev().val(quantity);
+      
+      $(this).parent().prev().val(quantity); //가져온 수량을 input에 넣기
+      tmoney = $(this).parents('.add-opt').find('.toptmoney').val(); //input에 저장된 사진+옵션 가격가져오기
+      let ttmoney = tmoney * quantity; //(상품가격+옵션)*수량
+      ttmoney = ttmoney.toLocaleString(); //세자리 콤마
+      $(this).parents('.add-opt').find('.tomoney').html(ttmoney + "원"); //출력
+      
+      //let ind = $('.qup').index(this);
+      //$('.tomoney').eq(ind).html(tmoney + "원");
 
-      totalmoney = prprice * quantity;
-      let tmoney = totalmoney.toLocaleString();
-      let txt = "총 상품금액(수량) : <strong>"+tmoney+"원</strong>("+quantity+"개)";
-      $('.totalmoney').html(txt);
+
+      // let txt = "총 상품금액(수량) : <strong>"+tmoney+"원</strong>("+quantity+"개)";
+      // $('.totalmoney').html(txt);
    });
 
    //$('#qdown').click(function(){
@@ -117,8 +134,11 @@ $(document).ready(function(){
       }
       //$('.quantity').eq(totalTextLength).val(quantity);
       $(this).parent().next().val(quantity);
-      totalmoney = prprice * quantity;
-      let tmoney = totalmoney.toLocaleString();
+      tmoney = $(this).parents('.add-opt').find('.toptmoney').val(); //input에 저장된 사진+옵션 가격가져오기
+      let ttmoney = tmoney * quantity; //(상품가격+옵션)*수량
+      ttmoney = ttmoney.toLocaleString(); //세자리 콤마
+      $(this).parents('.add-opt').find('.tomoney').html(ttmoney + "원"); //출력
+      
       let txt = "총 상품금액(수량) : <strong>"+tmoney+"원</strong>("+quantity+"개)";
       $('.totalmoney').html(txt);
    });
