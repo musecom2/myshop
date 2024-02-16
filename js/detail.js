@@ -159,8 +159,27 @@ $(document).ready(function(){
     $('.nav-pills>li').removeClass('active');
     $(this).addClass('active');
   });
+   viewReview();
+   
+   //리뷰 슬릭
+   $('#review').show(function(){
+      $('.review-photo').slick({
+            slidesToShow: 8,
+            slidesToScroll: 1,
+            centerMode: true
+      });`
+   });
 
 });
+
+
+//리뷰 퍼센트 보기 함수
+function viewReview(){
+   $('.box-line-color').each(function(){
+      let h = $(this).css('height');
+      $(this).html("<span>"+h+"</span>");
+   });
+}
 
 function totalMoney(delivery){
    let tm = 0;

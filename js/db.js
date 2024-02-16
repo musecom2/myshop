@@ -39,6 +39,8 @@ $(function(){
          cssEase: 'linear',
          autoplay: true,
          autoplaySpeed: 5000,
+         prevArrow:$('.hero-prev'),
+         nextArrow:$('.hero-next'),
          responsive: [
             {
               breakpoint: 768,
@@ -49,7 +51,9 @@ $(function(){
                 dots: true,
                 autoplay: true,
                 autoplaySpeed: 5000,    
-                speed: 500         
+                speed: 500,
+                prevArrow:$('.hero-prev'),
+                nextArrow:$('.hero-next')         
               }
             }
           ]
