@@ -167,8 +167,33 @@ $(document).ready(function(){
             slidesToShow: 8,
             slidesToScroll: 1,
             centerMode: true
-      });`
+      });``
    });
+
+//리뷰 팝업창
+$('.imgs').click(function(e){
+   e.preventDefault();
+   const src = $(this).find('img').attr('src');  //getter
+   $('.imgbox').find('img').attr('src', src).attr('alt', src); //setter
+   $('.rp').fadeIn();
+});
+
+$(document).mouseup(function(e){
+
+   /*
+    if($('.rp').has(e.target).length === 0){
+       $('.rp').fadeOut();
+    }
+   */
+  if($(e.target).hasClass('rp')){
+     $('.rp').fadeOut();
+  }
+    ``
+});
+
+$('.rp-close').click(function(){
+     $('.rp').fadeOut();
+});
 
 });
 
